@@ -1,0 +1,5 @@
+# Ignore paths that contain generated content.
+nbproject/
+
+# Ignore default text files
+.htaccess

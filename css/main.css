@@ -1,0 +1,5 @@
+#paint {
+    border:1px #000 solid;
+    /*box-shadow:4px 6px 6px #444444;*/
+    cursor:crosshair;
+}
