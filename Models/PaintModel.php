@@ -19,8 +19,22 @@ class PaintModel extends Model{
         $insertId = $db->lastInsertId();   */
     }
     
-    public function getData(){
-        $stmt = $this->db->query("SELECT img_name FROM images");
+    public function getData(){ //public function getData($id = NULL, $pass = NULL, $img_name = NULL){
+        $stmt = $this->db->query("SELECT * FROM images");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    public function checkPass($id){
+        $stmt = $this->db->query("SELECT password FROM images where id={$id}");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    public function getFilename($id){
+        $stmt = $this->db->query("SELECT img_name FROM images where id={$id}");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    public function delData($id){
+        $stmt = $this->db->query("DELETE FROM images WHERE id = {$id}");
     }
 }

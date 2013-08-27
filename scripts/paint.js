@@ -114,19 +114,28 @@ $(function(){
     });
     
     $('.save').click(function(){
-        $.ajax({
-            url  : '/paint/save',
-            type : 'POST',
-            data : {data : canvas.toDataURL("image/png")},
-            complete : function(data, status){
-                if (status == 'success'){
-                    alert('Saved');
+        if ($('#pass').val().length >= 6){
+            $.ajax({
+                url  : '/paint/save',
+                type : 'POST',
+                data : {
+                    data : canvas.toDataURL("image/png"),
+                    password : MD5($('#pass').val())
+                },
+                complete : function(data, status){
+                    if (status == 'success'){
+                        $('.tools').append('<p>Image Saved.</p>');
+                        $('#pass').val('');
+                    }
+                },
+                error : function(data, status){
+                    $('.tools').append('<p>Error. Image not saved.</p>')
                 }
-            },
-            error : function(data, status){
-                alert('Error');
-            }
         });
+        }
+        else{
+            $('.tools').append('<p>Set the password and click Save button</p>');
+        }
     });
     
 })

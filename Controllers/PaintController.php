@@ -1,6 +1,13 @@
 <?php
 
 class PaintController extends Controller{
+    private $model;
+    
+    public function __construct() {
+        $this->model = new PaintModel();
+    }
+
+
     public function indexAction() {
         Registry::get('View')->show('Paint', 'index');
     }
@@ -20,15 +27,20 @@ class PaintController extends Controller{
             fwrite($fp, $data);  
             fclose($fp); 
         }
+         if (isset($_POST['password'])){
+            $password = $_POST['password'];
+        }
         
-        $paintmodel = new PaintModel();
+        
+        //$paintmodel = new PaintModel();
         $data = array(
             'img_name' => $filename,
-            'password' => '123',
+            'password' => $password,
             'created' => date("Y-m-d H:i:s")
             );
         try {
-            $paintmodel->setdata($data);
+            //$paintmodel->setdata($data);
+            $this->model->setdata($data);
         } catch(PDOException $ex) {
             echo $ex->getMessage();
         }
@@ -51,5 +63,21 @@ class PaintController extends Controller{
         else {
             //          fail;
         }*/
+        return TRUE;
+    }
+    
+    public function delAction($id){ //$_POST['password']
+        try {
+            //$paintmodel->setdata($data);
+            $res = $this->model->checkPass($id);
+            if ($password === $res['password']){
+                $filename = getFilename($id);
+                unlink(path_to_site . $filename['img_name']);
+                $this->model->deldata($id);
+            }
+            
+        } catch(PDOException $ex) {
+            echo $ex->getMessage();
+        }
     }
 }
