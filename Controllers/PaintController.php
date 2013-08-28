@@ -2,14 +2,21 @@
 
 class PaintController extends Controller{
     private $model;
-    
+    private $view;
+
+
     public function __construct() {
         $this->model = new PaintModel();
+        $this->view = Registry::get('View');
+        $this->view->setLayout('layout.php');
     }
 
 
     public function indexAction() {
-        Registry::get('View')->show('Paint', 'index');
+        //Registry::get('View')->show('Paint', 'index');
+        //Registry::get('View')->show();
+        //Registry::get('View')->show('Index', 'index');
+        $this->view->render();
     }
     
     public function saveAction(){
@@ -68,13 +75,29 @@ class PaintController extends Controller{
     
     public function delAction($id){ //$_POST['password']
         try {
+            if($id){
+                if (isset($_POST['password'])){
+                    $res = getImage($id);
+                    if (md5($_POST['password']) === $res['password']){
+                        unlink(path_to_site . $res['img_name']);
+                        $this->model->delImage($id);
+                        echo 'Delete';
+                    }
+                }
+            }
+            else{
+                throw new Exception('not id');
+            }
+            
+            //Registry::get('router')->redirect('/');
+            
             //$paintmodel->setdata($data);
-            $res = $this->model->checkPass($id);
+            /*$res = $this->model->checkPass($id);
             if ($password === $res['password']){
                 $filename = getFilename($id);
                 unlink(path_to_site . $filename['img_name']);
                 $this->model->deldata($id);
-            }
+            }*/
             
         } catch(PDOException $ex) {
             echo $ex->getMessage();

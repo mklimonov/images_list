@@ -24,7 +24,20 @@ class PaintModel extends Model{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    public function checkPass($id){
+    public function getImage($id = NULL) {
+        if($id){
+             $stmt = $this->db->prepare("SELECT * FROM topics WHERE id=:id");
+             $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+             $stmt->execute(array(':id' => $id));
+             return $stmt->execute()->fetch(PDO::FETCH_ASSOC);
+        } 
+        else {
+             $sql = "SELECT * FROM images ORDER BY created DESC";
+             return $this->db->query($sql);
+        }
+}
+    
+    /*public function checkPass($id){
         $stmt = $this->db->query("SELECT password FROM images where id={$id}");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -32,9 +45,12 @@ class PaintModel extends Model{
     public function getFilename($id){
         $stmt = $this->db->query("SELECT img_name FROM images where id={$id}");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+    }*/
     
     public function delData($id){
-        $stmt = $this->db->query("DELETE FROM images WHERE id = {$id}");
+        if($id){
+            $this->db->query("DELETE FROM images WHERE id = {$id}");
+        }
+        //$stmt = $this->db->query("DELETE FROM images WHERE id = {$id}");
     }
 }

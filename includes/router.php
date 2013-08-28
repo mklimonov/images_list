@@ -4,7 +4,7 @@ class Router{
     //private $registry;
     private $routes;
     private $request = array();
-    private $controller_name = 'Index';
+    //private $controller_name = 'Index';
 
 
     /* function __construct($registry) {
@@ -16,7 +16,8 @@ class Router{
         $this->request = array(
             'model' => 'IndexModel',
             'controller' => '',
-            'action' => ''
+            'action' => '',
+            'params' => array()
         );
         
         $this->routes = explode('/', $_SERVER['REQUEST_URI']);
@@ -55,6 +56,10 @@ class Router{
         else {
             $this->request['action'] = 'indexAction';
         }
+        
+        if (!empty($this->routes[3])){
+            $this->request['param'] = $this->routes[3];
+        }
     }
     
     /**
@@ -86,7 +91,12 @@ class Router{
 
             if (method_exists($controller, $this->request['action'])){
                 $action = $this->request['action'];
-                $controller->$action();
+                if (isset($this->request['param'])){
+                    $controller->$action($this->request['param']);
+                }
+                else {
+                    $controller->$action();
+                }
             }
             else {
                 Router::ErrorPage();
@@ -98,5 +108,9 @@ class Router{
     public function ErrorPage(){
         echo 'Page Not Found';
         //header('Location: ' . $url, true, $httpStatus);
+    }
+    
+    public function redirect($url){
+        header("Location: " . $url);
     }
 }

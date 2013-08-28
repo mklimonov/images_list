@@ -2,7 +2,12 @@
 
 class View{
     private $vars = array();
-    
+    protected $layout;
+
+    function setLayout($layout) { 
+        $this->layout = $layout;
+    }
+
     /*
      * @registry object
      */
@@ -23,7 +28,7 @@ class View{
         $this->vars[$name] = $value;
     }
     
-    public function show($controller_name, $view){ //, $data = null)
+    public function render($view = 'index'){ //, $data = null)
     //{
         /*
         if(is_array($data)) {
@@ -31,23 +36,24 @@ class View{
             extract($data);
         }
         */
-        if ($controller_name != 'Index'){
-            $path = path_to_site. 'Views'. DIRECTORY_SEPARATOR . $controller_name . DIRECTORY_SEPARATOR .  $view . '.php';
-        }
-        else{
+        if ($this->layout){
             $path = path_to_site. 'Views'. DIRECTORY_SEPARATOR . $view . '.php';
+            
+            if (!file_exists($path)){
+                throw new Exception('Template not found' . $path);
+                return false;
+            }
+        
+            // Load variables
+            foreach ($this->vars as $key => $value) {
+                $$key = $value;
+            }
+            ob_start();
+            require($path);
+            $output = ob_get_clean();
+            
+            require path_to_site. 'Views'. DIRECTORY_SEPARATOR . $this->layout;
         }
-        
-        if (!file_exists($path)){
-            throw new Exception('Template not found' . $path);
-            return false;
-        }
-        
-        // Load variables
-	foreach ($this->vars as $key => $value) {
-            $$key = $value;
-	}
-        
-       require $path;
+
     }
 }
