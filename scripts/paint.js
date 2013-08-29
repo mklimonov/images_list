@@ -40,24 +40,7 @@
 
 
 $(function(){
-    $( "#secure" ).dialog({autoOpen: false});
-    
-    $('.save').click(function(){
-        $( "#secure" ).dialog({
-            autoOpen: true,
-            resizable: false,
-            height:140,
-            modal: false,
-                buttons: {
-                    Save: function() {
-                        $( this ).dialog( "close" );
-                    },
-                    Cancel: function() {
-                        $( this ).dialog( "close" );
-                    }
-                }
-         });
-    });
+
      
     
     var canvas = document.querySelector('#paint');
@@ -129,19 +112,81 @@ $(function(){
     
     init();
     
-    $('.download').click(function(){
+    $('#download').click(function(){
         window.open(canvas.toDataURL("image/png"));
     });
     
+    //$( "#secure" ).dialog({autoOpen: false});
+    
+    $('#save').click(function(){
+        $( "#secure" ).dialog( "open" );
+    });
+    
+    var password = $( "#password" );
+    var tips = $( ".validateTips" );
+    
+    
+    
+     function updateTips( t ) {
+        tips
+            .text( t )
+            .addClass( "ui-state-highlight" );
+        setTimeout(function() {
+            tips.removeClass( "ui-state-highlight", 1500 );
+        }, 500 );
+    }
+    
+    function checkLength( o, n, min, max ) {
+        if ( o.val().length > max || o.val().length < min ) {
+            o.addClass( "ui-state-error" );
+            updateTips( "Length of " + n + " must be between " +
+                min + " and " + max + "." );
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    function checkRegexp( o, regexp, n ) {
+        if ( !( regexp.test( o.val() ) ) ) {
+            o.addClass( "ui-state-error" );
+            updateTips( n );
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    $( "#secure" ).dialog({
+            autoOpen: false,
+            resizable: false,
+            width: 500,
+            height:220,
+            modal: false,
+                buttons: {
+                    Save: function() {
+                        var bValid = true;
+                        bValid = bValid && checkLength( password, "password", 5, 16 );
+                        bValid = bValid && checkRegexp( password, /^([0-9a-zA-Z])+$/, "Password field only allow : a-z 0-9" );
+                        if (bValid){
+                            save();
+                            $( this ).dialog( "close" );
+                        }
+                    },
+                    Cancel: function() {
+                        $( this ).dialog( "close" );
+                    }
+                }
+         });
+    
     
     function save(){
-        if ($('#pass').val().length >= 6){
             $.ajax({
                 url  : '/paint/save',
                 type : 'POST',
                 data : {
                     data : canvas.toDataURL("image/png"),
-                    password : MD5($('#pass').val())
+                    password : MD5( password.val() )//MD5($('#pass').val())
                 },
                 complete : function(data, status){
                     if (status == 'success'){
@@ -153,10 +198,6 @@ $(function(){
                     $('.tools').append('<p>Error. Image not saved.</p>')
                 }
         });
-        }
-        else{
-            $('.tools').append('<p>Set the password and click Save button</p>');
-        }
     }
     /*
     $('.save').click(function(){

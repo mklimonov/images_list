@@ -4,3 +4,4 @@ images/
 
 # Ignore default text files
 .htaccess
+.gitignore

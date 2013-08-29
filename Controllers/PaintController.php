@@ -54,16 +54,19 @@ class PaintController extends Controller{
         return TRUE;
     }
     
-    public function delAction($id){ //$_POST['password']
+    public function delAction(){ //$_POST['password']
         try {
-            if($id){
+            if(isset($_POST['id'])){
                 if (isset($_POST['password'])){
-                    $res = getImage($id);
-                    if (md5($_POST['password']) === $res['password']){
-                        unlink(path_to_site . $res['img_name']);
-                        $this->model->delImage($id);
-                        echo 'Delete';
+                    $res = $this->model->getImage($_POST['id']);
+                    if ($_POST['password'] === $res[0]['password']){
+                        unlink(path_to_site . $res[0]['img_name']);
+                        $this->model->delImage($_POST['id']);
+                        echo 'Deleted';
+                    } else {
+                        echo 'Passwotd not correct';
                     }
+                    
                 }
             }
             else{

@@ -26,10 +26,10 @@ class PaintModel extends Model{
     
     public function getImage($id = NULL) {
         if($id){
-             $stmt = $this->db->prepare("SELECT * FROM topics WHERE id=:id");
+             $stmt = $this->db->prepare("SELECT * FROM images WHERE id=:id");
              $stmt->bindParam(":id", $id, PDO::PARAM_INT);
-             $stmt->execute(array(':id' => $id));
-             return $stmt->execute()->fetch(PDO::FETCH_ASSOC);
+             $stmt->execute();
+             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } 
         else {
              $sql = "SELECT * FROM images ORDER BY created DESC";
@@ -47,9 +47,11 @@ class PaintModel extends Model{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }*/
     
-    public function delData($id){
+    public function delImage($id){
         if($id){
-            $this->db->query("DELETE FROM images WHERE id = {$id}");
+            $stmt = $this->db->prepare("DELETE FROM images WHERE id=:id");
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
         }
         //$stmt = $this->db->query("DELETE FROM images WHERE id = {$id}");
     }
