@@ -40,6 +40,26 @@
 
 
 $(function(){
+    $( "#secure" ).dialog({autoOpen: false});
+    
+    $('.save').click(function(){
+        $( "#secure" ).dialog({
+            autoOpen: true,
+            resizable: false,
+            height:140,
+            modal: false,
+                buttons: {
+                    Save: function() {
+                        $( this ).dialog( "close" );
+                    },
+                    Cancel: function() {
+                        $( this ).dialog( "close" );
+                    }
+                }
+         });
+    });
+     
+    
     var canvas = document.querySelector('#paint');
     var ctx = canvas.getContext('2d');
     
@@ -113,6 +133,32 @@ $(function(){
         window.open(canvas.toDataURL("image/png"));
     });
     
+    
+    function save(){
+        if ($('#pass').val().length >= 6){
+            $.ajax({
+                url  : '/paint/save',
+                type : 'POST',
+                data : {
+                    data : canvas.toDataURL("image/png"),
+                    password : MD5($('#pass').val())
+                },
+                complete : function(data, status){
+                    if (status == 'success'){
+                        $('.tools').append('<p>Image Saved.</p>');
+                        $('#pass').val('');
+                    }
+                },
+                error : function(data, status){
+                    $('.tools').append('<p>Error. Image not saved.</p>')
+                }
+        });
+        }
+        else{
+            $('.tools').append('<p>Set the password and click Save button</p>');
+        }
+    }
+    /*
     $('.save').click(function(){
         if ($('#pass').val().length >= 6){
             $.ajax({
@@ -136,6 +182,6 @@ $(function(){
         else{
             $('.tools').append('<p>Set the password and click Save button</p>');
         }
-    });
+    });*/
     
 })

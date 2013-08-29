@@ -1,0 +1,25 @@
+{% extends "./layout.html.twig" %}
+
+{% block javascripts %}
+    <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="../../scripts/md5.js"></script>
+    <script src="../../scripts/paint.js"></script>
+{% endblock %}
+
+{% block body %}
+    <h3>Paint</h3>
+    <div id="sketch">
+	<canvas id="paint" width="800" height="300"></canvas>
+    </div>
+    <div class="tools">
+    <a class="download" href="#download" style="float: left; width: 100px;">Download</a>
+    <a class="save" href="#save" style="float: left; width: 100px;">Save</a>
+    <div id="secure">
+        <label>Set the password and click Save button </label>
+        <input id="pass" type ="password" placeholder="Password">
+        <input class="save" type ="button" value="Save">
+    </div>
+  </div>
+    
+{% endblock %}

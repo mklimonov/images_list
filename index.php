@@ -16,10 +16,13 @@ $path_to_site = dirname(__FILE__) . DIRECTORY_SEPARATOR;
 define('path_to_site', $path_to_site);
 
 require_once 'includes/init.php';
+include 'includes/Twig/Autoloader.php';
+
+Autoload::init();
 
 //Connect with db
-$db = new PDO('mysql:host=localhost;dbname=images', 'root', '');
-Registry::set('db', $db);
+//$db = new PDO('mysql:host=localhost;dbname=images', 'root', '');
+//Registry::set('db', $db);
 //$registry->db = $db;
 
 //Create routes

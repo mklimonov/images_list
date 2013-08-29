@@ -1,14 +1,13 @@
 <?php
 
 class PaintController extends Controller{
-    private $model;
-    private $view;
-
+    /*private $model;
+    private $view;*/
 
     public function __construct() {
         $this->model = new PaintModel();
         $this->view = Registry::get('View');
-        $this->view->setLayout('layout.php');
+        //$this->view->setLayout('layout.php');
     }
 
 
@@ -16,7 +15,9 @@ class PaintController extends Controller{
         //Registry::get('View')->show('Paint', 'index');
         //Registry::get('View')->show();
         //Registry::get('View')->show('Index', 'index');
-        $this->view->render();
+        //$this->view->render();
+        
+        $this->view->render('Paint/index', array());
     }
     
     public function saveAction(){
@@ -38,8 +39,6 @@ class PaintController extends Controller{
             $password = $_POST['password'];
         }
         
-        
-        //$paintmodel = new PaintModel();
         $data = array(
             'img_name' => $filename,
             'password' => $password,
@@ -52,24 +51,6 @@ class PaintController extends Controller{
             echo $ex->getMessage();
         }
         
-        
-        
-        // 1. generate filename = time()
-        // 2. Save in db
-        // 3. Password
-          
-      /*  $based64Image=substr($_POST['data'], strpos($_POST['data'], ',')+1);
-        $image = imagecreatefromstring(base64_decode($based64Image));
-        $fileName='';
-        if($image != false) {
-            $fileName=time().'.png';
-            if(!imagepng($image, $fileName)) {
-                //          fail;
-            }
-        }
-        else {
-            //          fail;
-        }*/
         return TRUE;
     }
     
