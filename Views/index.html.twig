@@ -4,8 +4,9 @@
 {% block javascripts %}
     <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-    <script src="../../scripts/md5.js"></script>
-    <script src="../../scripts/check.js"></script>
+    <script src="/scripts/jquery.redirect.min.js"></script>
+    <script src="/scripts/md5.js"></script>
+    <script src="/scripts/check.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -20,18 +21,20 @@
                 <input type="hidden" name="id" id="id" value="{{ img.id}}"  />
              <!--   <a href="/paint/edit/{#{ img.id}#}">Edit</a>
                 <a href="/paint/del/{#{ img.id}#}">Delete</a>-->
-  
             </li>
         {% endfor %}
             
         <div id="secure">
             <fieldset>
                 <p class="validateTips"></p>
-                    <label for="password">Enter the password that Edit/Delete Image </label>
+                    <label for="password">Enter the password that Edit/Delete Image</label>
                     <input type="password" name="password" id="password" value=""  />
             </fieldset>
         </div>
-        
+            
+    <div id="stat_mes">
+        <p class="status"></p>
+    </div>    
         <!--<?php //foreach ($images as $img) : ?>
             <li>
                 <img src="<?//print $img['img_name']?>">

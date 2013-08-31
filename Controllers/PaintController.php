@@ -54,7 +54,29 @@ class PaintController extends Controller{
         return TRUE;
     }
     
-    public function delAction(){ //$_POST['password']
+    public function editAction(){ //скрытая форма
+        try {
+            if(isset($_POST['id'])){
+                if (isset($_POST['password'])){
+                    $res = $this->model->getImage($_POST['id']);
+                    if ($_POST['password'] === $res[0]['password']){
+                        $this->view->render('Paint/edit', array('src' => $res[0]['img_name']));
+                        //Registry::get('router')->redirect('paint/edit');
+                    } else {
+                        echo 'Wrong Password';
+                    }
+                }
+            }
+            else{
+                throw new Exception('Could not edit image becouse id not found');
+            }
+            
+        } catch(PDOException $ex) {
+            echo $ex->getMessage();
+        }
+    }
+
+    public function delAction(){ 
         try {
             if(isset($_POST['id'])){
                 if (isset($_POST['password'])){
@@ -62,27 +84,14 @@ class PaintController extends Controller{
                     if ($_POST['password'] === $res[0]['password']){
                         unlink(path_to_site . $res[0]['img_name']);
                         $this->model->delImage($_POST['id']);
-                        echo 'Deleted';
                     } else {
-                        echo 'Passwotd not correct';
+                        echo 'Wrong Password';
                     }
-                    
                 }
             }
             else{
-                throw new Exception('not id');
+                throw new Exception('Could not remove image becouse id not found');
             }
-            
-            //Registry::get('router')->redirect('/');
-            
-            //$paintmodel->setdata($data);
-            /*$res = $this->model->checkPass($id);
-            if ($password === $res['password']){
-                $filename = getFilename($id);
-                unlink(path_to_site . $filename['img_name']);
-                $this->model->deldata($id);
-            }*/
-            
         } catch(PDOException $ex) {
             echo $ex->getMessage();
         }

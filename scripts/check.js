@@ -2,6 +2,7 @@ $(function(){
     
     var password = $( "#password" );
     var tips = $( ".validateTips" );
+    var status = $( ".status" );
     var buttonElementId;
     var id;
     
@@ -18,6 +19,15 @@ $(function(){
     $('#del').click(function(){
         $( "#secure" ).dialog( "open" );
     });*/
+    
+   function updateStatus( t ) {
+        status
+            .text( t )
+            .addClass( "ui-state-highlight" );
+        setTimeout(function() {
+            tips.removeClass( "ui-state-highlight", 1500 );
+        }, 500 );
+    }
     
     function updateTips( t ) {
         tips
@@ -56,7 +66,7 @@ $(function(){
             height:220,
             modal: false,
                 buttons: {
-                    Save: function() {
+                    Ok: function() {
                         var bValid = true;
                         bValid = bValid && checkLength( password, "password", 5, 16 );
                         bValid = bValid && checkRegexp( password, /^([0-9a-zA-Z])+$/, "Password field only allow : a-z 0-9" );
@@ -75,44 +85,64 @@ $(function(){
                     }
                 }
      });
-         
-   function edit(){
-            $.ajax({
-                url  : '/paint/edit',
-                type : 'POST',
-                data : {
-                    id: id.val(),
-                    password : MD5( password.val() )//MD5($('#pass').val())
-                },
-                complete : function(data, status){
-                    if (status == 'success'){
-                        $('.tools').append('<p>Image Saved.</p>');
-                        $('#pass').val('');
-                    }
-                },
-                error : function(data, status){
-                    $('.tools').append('<p>Error. Image not saved.</p>')
+     
+    $( "#stat_mes" ).dialog({
+        autoOpen: false,
+        resizable: false,
+        width: 500,
+        height:220,
+        modal: false,
+            buttons: {
+                Ok: function() {
+                    $( this ).dialog( "close" );
                 }
-        });
+            }
+    });
+    
+   function edit(){
+       $().redirect('paint/edit', {'id': id.val(), 'password': MD5( password.val() )});
+       /*window.location = '/paint/edit';
+       $.ajax({
+            url  : '/paint/edit',
+            type : 'POST',
+            data : {
+                id: id.val(),
+                password : MD5( password.val() )//MD5($('#pass').val())
+            },
+            complete : function(data, status){
+                if (status == 'success'){
+                    //window.location('/paint/edit');
+                }
+            },
+            error : function(data, status){
+                updateStatus('Error. Image has not been saved.');
+                $( "#stat_mes" ).dialog( "open" );
+                //$('.tools').append('<p>Error. Image not saved.</p>')
+            }
+        });*/
     }      
     
     function del(){
-            $.ajax({
-                url  : '/paint/del',
-                type : 'POST',
-                data : {
-                    id: id.val(),
-                    password : MD5( password.val() )//MD5($('#pass').val())
-                },
-                complete : function(data, status){
-                    if (status == 'success'){
-                        $('.tools').append('<p>Image Saved.</p>');
-                        $('#pass').val('');
-                    }
-                },
-                error : function(data, status){
-                    $('.tools').append('<p>Error. Image not saved.</p>')
+        $.ajax({
+            url  : '/paint/del',
+            type : 'POST',
+            data : {
+                id: id.val(),
+                password : MD5( password.val() )//MD5($('#pass').val())
+            },
+            complete : function(data, status){
+                if (status == 'success'){
+                    updateStatus('Image removed');
+                    $( "#mes" ).dialog( "open" );
+                    /*$('.tools').append('<p>Image Saved.</p>');
+                    $('#pass').val('');*/
                 }
-        });
+            },
+            error : function(data, status){
+                updateStatus('Error. Image has not been removed');
+                $( "#mes" ).dialog( "open" );
+                //$('.tools').append('<p>Error. Image not saved.</p>')
+            }
+    });
     }    
 })

@@ -41,9 +41,7 @@ fieldset { padding:0; border:0; margin-top:25px; margin-left: 30px; }
 #secure label{ width: 315px; margin:0 auto; margin-top: 5px; }
 #secure input{ width: 180px; margin:0 auto; margin-top: 5px; }
 
-#paint {
-    border:1px #000 solid;
-    /*box-shadow:4px 6px 6px #444444;*/
-    cursor:crosshair;
-}
+#paint { border:1px #000 solid; /*box-shadow:4px 6px 6px #444444;*/ cursor:crosshair; }
+#image{display: none;}
+
 

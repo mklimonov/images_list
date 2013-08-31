@@ -4,13 +4,14 @@
     <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
     <script src="/scripts/md5.js"></script>
-    <script src="/scripts/paint.js"></script>
+    <script src="/scripts/edit.js"></script>
 {% endblock %}
 
 {% block body %}
     <h3>Paint</h3>
     <div id="sketch">
 	<canvas id="paint" width="800" height="300"></canvas>
+        <img id="image" src="/{{src}}">
     </div>
     <div class="tools">
     <!--<a class="download" href="#download" style="float: left; width: 100px;">Download</a>
@@ -19,17 +20,16 @@
     <button id="save">Save</button>
     <div id="secure">
         <fieldset>
-         <p class="validateTips"></p>
-        <label for="password">Set the password and click Save button </label>
-        <input type="password" name="password" id="password" value=""  />
+            <p class="validateTips"></p>
+            <label for="password">Set the password and click Save button </label>
+            <input type="password" name="password" id="password" value=""  />
         </fieldset>
       <!--  <input id="pass" type ="password" placeholder="Password">class="text ui-widget-content ui-corner-all"
         <input class="save" type ="button" value="Save">-->
     </div>
-    
     <div id="stat_mes">
         <p class="status"></p>
-    </div>
+    </div> 
   </div>
     
 {% endblock %}

@@ -40,13 +40,10 @@
 
 
 $(function(){
-
-     
-    
     var canvas = document.querySelector('#paint');
     var ctx = canvas.getContext('2d');
     
-    function loadImage(dataURL) {
+  /*  function loadImage(dataURL) {
         //var canvas = document.getElementById('#paint');
         //var context = canvas.getContext('2d');
 
@@ -57,9 +54,9 @@ $(function(){
         };
 
         img.src = dataURL;
-    }
+    }*/
         
-    function init(){
+    function paint(){
         /*if (document.images[0]){
             if (document.images[0].src){
                 //ctx.drawImage(document.images[0], 0, 0);
@@ -106,17 +103,13 @@ $(function(){
             ctx.lineTo(mouse.x, mouse.y);
             ctx.stroke();
         };
- 
-        //$('#paint').sketch();
     }
     
-    init();
+    paint();
     
     $('#download').click(function(){
         window.open(canvas.toDataURL("image/png"));
     });
-    
-    //$( "#secure" ).dialog({autoOpen: false});
     
     $('#save').click(function(){
         $( "#secure" ).dialog( "open" );
@@ -124,10 +117,18 @@ $(function(){
     
     var password = $( "#password" );
     var tips = $( ".validateTips" );
+    var status = $( ".status" );
     
+    function updateStatus( t ) {
+        status
+            .text( t )
+            .addClass( "ui-state-highlight" );
+        setTimeout(function() {
+            tips.removeClass( "ui-state-highlight", 1500 );
+        }, 500 );
+    }
     
-    
-     function updateTips( t ) {
+    function updateTips( t ) {
         tips
             .text( t )
             .addClass( "ui-state-highlight" );
@@ -178,6 +179,19 @@ $(function(){
                     }
                 }
          });
+         
+    $( "#stat_mes" ).dialog({
+        autoOpen: false,
+        resizable: false,
+        width: 500,
+        height:220,
+        modal: false,
+            buttons: {
+                Ok: function() {
+                    $( this ).dialog( "close" );
+                }
+            }
+    });
     
     
     function save(){
@@ -190,15 +204,20 @@ $(function(){
                 },
                 complete : function(data, status){
                     if (status == 'success'){
-                        $('.tools').append('<p>Image Saved.</p>');
-                        $('#pass').val('');
+                        updateStatus('Image Saved');
+                        $( "#stat_mes" ).dialog( "open" );
+                        /*$('.tools').append('<p>Image Saved.</p>');
+                        $('#pass').val('');*/
                     }
                 },
                 error : function(data, status){
-                    $('.tools').append('<p>Error. Image not saved.</p>')
+                    updateStatus('Error. Image has not been saved.');
+                    $( "#stat_mes" ).dialog( "open" );
+                    //$('.tools').append('<p>Error. Image not saved.</p>');
                 }
         });
     }
+    
     /*
     $('.save').click(function(){
         if ($('#pass').val().length >= 6){
