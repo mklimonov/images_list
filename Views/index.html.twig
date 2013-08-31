@@ -12,18 +12,21 @@
 {% block body %}
     <h3>Images List</h3>
     <ul>
-
-        {% for img in images %}
-            <li>
-                <img src='{{img.img_name}}'>
-                <button id="edit">Edit</button>
-                <button id="del">Delete</button>
-                <input type="hidden" name="id" id="id" value="{{ img.id}}"  />
-             <!--   <a href="/paint/edit/{#{ img.id}#}">Edit</a>
-                <a href="/paint/del/{#{ img.id}#}">Delete</a>-->
-            </li>
-        {% endfor %}
-            
+        {% if images %}
+            {% for img in images %}
+                <li>
+                    <img src='{{img.img_name}}'>
+                    <button id="edit">Edit</button>
+                    <button id="del">Delete</button>
+                    <input type="hidden" name="id" id="id" value="{{ img.id}}"  />
+                 <!--   <a href="/paint/edit/{#{ img.id}#}">Edit</a>
+                    <a href="/paint/del/{#{ img.id}#}">Delete</a>-->
+                </li>
+            {% endfor %}
+        {% else %}
+                <h3>The site has not images yet.<a href="/paint">Create?</a></h3>
+        {% endif %}
+                
         <div id="secure">
             <fieldset>
                 <p class="validateTips"></p>

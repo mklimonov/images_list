@@ -54,6 +54,24 @@ class PaintController extends Controller{
         return TRUE;
     }
     
+    public function updateAction(){
+        if (isset($_POST['data'])){
+            // Init dataURL variable
+            $dataURL = $_POST["data"];  
+            // Extract base64 data (Get rid from the MIME & Data Type)
+            $parts = explode(',', $dataURL);  
+            $data = $parts[1];  
+            // Decode Base64 data
+            $data = base64_decode($data);  
+            // Save data as an image
+            $filename = $_POST['name'];//подстраку взять src: "/
+            $fp = fopen($filename, 'w');  
+            fwrite($fp, $data);  
+            fclose($fp); 
+        }        
+        return TRUE;
+    }
+    
     public function editAction(){ //скрытая форма
         try {
             if(isset($_POST['id'])){

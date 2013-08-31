@@ -101,25 +101,6 @@ $(function(){
     
    function edit(){
        $().redirect('paint/edit', {'id': id.val(), 'password': MD5( password.val() )});
-       /*window.location = '/paint/edit';
-       $.ajax({
-            url  : '/paint/edit',
-            type : 'POST',
-            data : {
-                id: id.val(),
-                password : MD5( password.val() )//MD5($('#pass').val())
-            },
-            complete : function(data, status){
-                if (status == 'success'){
-                    //window.location('/paint/edit');
-                }
-            },
-            error : function(data, status){
-                updateStatus('Error. Image has not been saved.');
-                $( "#stat_mes" ).dialog( "open" );
-                //$('.tools').append('<p>Error. Image not saved.</p>')
-            }
-        });*/
     }      
     
     function del(){

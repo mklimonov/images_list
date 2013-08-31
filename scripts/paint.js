@@ -42,6 +42,7 @@
 $(function(){
     var canvas = document.querySelector('#paint');
     var ctx = canvas.getContext('2d');
+    var bMouseDown = false;
     
   /*  function loadImage(dataURL) {
         //var canvas = document.getElementById('#paint');
@@ -56,25 +57,10 @@ $(function(){
         img.src = dataURL;
     }*/
         
-    function paint(){
-        /*if (document.images[0]){
-            if (document.images[0].src){
-                //ctx.drawImage(document.images[0], 0, 0);
-                loadImage(document.images[0].src);
-            }
-        }
-        
-        $('.imagedata').css({'display' : 'none'});
-        */
-       
-        //var sketch = document.querySelector('#sketch');
-        //var sketch_style = getComputedStyle(sketch);
-        //canvas.width = parseInt(sketch_style.getPropertyValue('width'));
-        //canvas.height = parseInt(sketch_style.getPropertyValue('height'));
+/*    function paint(){
+       var mouse = {x: 0, y: 0};
 
-        var mouse = {x: 0, y: 0};
-
-        /* Mouse Capturing Work */
+        /* Mouse Capturing Work ///
         canvas.addEventListener('mousemove', function(e) {
             mouse.x = e.pageX - this.offsetLeft;
             mouse.y = e.pageY - this.offsetTop;
@@ -83,7 +69,7 @@ $(function(){
             //ctx.putImageData(imageData, mouse.x, mouse.y);
         }, false);
 
-        /* Drawing on Paint App */
+        /* Drawing on Paint App ///
         ctx.lineWidth = 5;
         ctx.lineJoin = 'round';
         ctx.lineCap = 'round';
@@ -103,16 +89,55 @@ $(function(){
             ctx.lineTo(mouse.x, mouse.y);
             ctx.stroke();
         };
+    }*/
+    
+    function paint(){
+        var image = new Image();
+        image.onload = function () {
+            ctx.drawImage(image, 0, 0, image.width, image.height); // draw the image on the canvas
+        };
+        
+        if (document.querySelector('#image')){
+            image.src = document.querySelector('#image').src;
+        }
+        
+        $('#paint').mousedown(function(e) { // mouse down handler
+            bMouseDown = true;
+        });
+        $('#paint').mouseup(function(e) { // mouse up handler
+            bMouseDown = false;
+        });
+        $('#paint').mousemove(function(e) { // mouse move handler
+            if (bMouseDown) {
+                var canvasOffset = $(canvas).offset();
+                var canvasX = Math.floor(e.pageX - canvasOffset.left);
+                var canvasY = Math.floor(e.pageY - canvasOffset.top);
+
+                var imageData = ctx.getImageData(canvasX, canvasY, 1, 1);
+                var pixel = imageData.data;
+                pixel[0] = 30;     // Red       
+                pixel[1] = 0;   // Green       
+                pixel[2] = 230;   // Blue       
+                pixel[3] = 255; // Alpha channel  
+                
+                ctx.putImageData(imageData, canvasX, canvasY); 
+            }
+        });
     }
     
     paint();
     
     $('#download').click(function(){
-        window.open(canvas.toDataURL("image/png"));
+        //window.open(canvas.toDataURL("image/png"));
+        window.open(canvas.toDataURL());
     });
     
     $('#save').click(function(){
         $( "#secure" ).dialog( "open" );
+    });
+    
+    $('#update').click(function(){
+        update();
     });
     
     var password = $( "#password" );
@@ -157,7 +182,7 @@ $(function(){
             return true;
         }
     }
-    
+        
     $( "#secure" ).dialog({
             autoOpen: false,
             resizable: false,
@@ -206,18 +231,48 @@ $(function(){
                     if (status == 'success'){
                         updateStatus('Image Saved');
                         $( "#stat_mes" ).dialog( "open" );
+                        setTimeout("document.location.href='/'", 1500);
+                        //window.location = '/paint';
                         /*$('.tools').append('<p>Image Saved.</p>');
                         $('#pass').val('');*/
                     }
                 },
                 error : function(data, status){
-                    updateStatus('Error. Image has not been saved.');
+                    updateStatus('Error. Image has not been saved. Wait and try again.');
                     $( "#stat_mes" ).dialog( "open" );
                     //$('.tools').append('<p>Error. Image not saved.</p>');
                 }
         });
     }
     
+    function update(){
+            $.ajax({
+                url  : '/paint/update',
+                type : 'POST',
+                data : {
+                    data : canvas.toDataURL(),
+                    name: document.querySelector('#image').src
+                    //password : MD5( password.val() )//MD5($('#pass').val())
+                    
+                },
+                complete : function(data, status){
+                    if (status == 'success'){
+                        updateStatus('Image Updated');
+                        $( "#stat_mes" ).dialog( "open" );
+                        setTimeout("document.location.href='/'", 1500);
+
+                        //window.location = '/paint';
+                        /*$('.tools').append('<p>Image Saved.</p>');
+                        $('#pass').val('');*/
+                    }
+                },
+                error : function(data, status){
+                    updateStatus('Error. Image has not been updated. Wait and try again.');
+                    $( "#stat_mes" ).dialog( "open" );
+                    //$('.tools').append('<p>Error. Image not saved.</p>');
+                }
+        });
+    }
     /*
     $('.save').click(function(){
         if ($('#pass').val().length >= 6){
@@ -244,4 +299,4 @@ $(function(){
         }
     });*/
     
-})
+});
