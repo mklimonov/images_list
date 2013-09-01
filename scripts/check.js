@@ -9,6 +9,7 @@ $(function(){
     $(':button').click(function() {
         buttonElementId = $(this).attr('id');
         id = $(this).siblings('input');
+        password.val('');
         $( "#secure" ).dialog( "open" );
     });
     
@@ -20,6 +21,10 @@ $(function(){
         $( "#secure" ).dialog( "open" );
     });*/
     
+    /*
+     * Update message for user
+     * @param string t
+     */
    function updateStatus( t ) {
         status
             .text( t )
@@ -29,6 +34,10 @@ $(function(){
         }, 500 );
     }
     
+    /*
+     * Update message for user
+     * @param string t
+     */
     function updateTips( t ) {
         tips
             .text( t )
@@ -38,6 +47,14 @@ $(function(){
         }, 500 );
     }
     
+    /*
+     * Checking password length
+     * @param string o
+     * @param string n
+     * @param int min
+     * @param int max
+     * @returns true - if the password is correct length else false
+     */
     function checkLength( o, n, min, max ) {
         if ( o.val().length > max || o.val().length < min ) {
             o.addClass( "ui-state-error" );
@@ -49,6 +66,13 @@ $(function(){
         }
     }
     
+    /*
+     * Searches 0 for a match to the regular expression given in regexp. 
+     * @param string o
+     * @param string regexp
+     * @param string n
+     * @returns true - if the password is correct length else false
+     */
     function checkRegexp( o, regexp, n ) {
         if ( !( regexp.test( o.val() ) ) ) {
             o.addClass( "ui-state-error" );
@@ -63,7 +87,7 @@ $(function(){
             autoOpen: false,
             resizable: false,
             width: 500,
-            height:220,
+            height:225,
             modal: false,
                 buttons: {
                     Ok: function() {
@@ -72,12 +96,13 @@ $(function(){
                         bValid = bValid && checkRegexp( password, /^([0-9a-zA-Z])+$/, "Password field only allow : a-z 0-9" );
                         if (bValid){
                             if (buttonElementId == 'edit'){
-                                edit();
+                                check_pass();
+                                //edit();
                             }
                             if (buttonElementId == 'del'){
                                 del();
                             }
-                            $( this ).dialog( "close" );
+                            //$( this ).dialog( "close" );
                         }
                     },
                     Cancel: function() {
@@ -90,7 +115,7 @@ $(function(){
         autoOpen: false,
         resizable: false,
         width: 500,
-        height:220,
+        height:225,
         modal: false,
             buttons: {
                 Ok: function() {
@@ -99,8 +124,36 @@ $(function(){
             }
     });
     
+    function check_pass(){
+        $.ajax({
+            url  : '/paint/check_pass',
+            type : 'POST',
+            data : {
+                id: id.val(),
+                password : MD5( password.val() )//MD5($('#pass').val())
+            },
+            complete : function(data, status){
+                if ((status == 'success') && (data.responseText == 'true')){
+                    edit();
+                }
+                else{
+                    updateStatus(data.responseText);
+                    $( "#secure" ).dialog("close");
+                    $( "#stat_mes" ).dialog( "open" ); 
+                }
+            },
+            error : function(data, status){
+                updateStatus('Error. Image has not been removed');
+                $( "#secure" ).dialog("close");
+                $( "#stat_mes" ).dialog( "open" );
+                //$('.tools').append('<p>Error. Image not saved.</p>')
+            }
+    });
+    }    
+    
    function edit(){
-       $().redirect('paint/edit', {'id': id.val(), 'password': MD5( password.val() )});
+       //$().redirect('paint/edit', {'id': id.val(), 'password': MD5( password.val() )});
+       $().redirect('paint/edit', {'id': id.val()});
     }      
     
     function del(){
@@ -112,16 +165,16 @@ $(function(){
                 password : MD5( password.val() )//MD5($('#pass').val())
             },
             complete : function(data, status){
-                if (status == 'success'){
-                    updateStatus('Image removed');
-                    $( "#mes" ).dialog( "open" );
-                    /*$('.tools').append('<p>Image Saved.</p>');
-                    $('#pass').val('');*/
+                if ((status == 'success') && (data.responseText)){
+                    //updateStatus('Image removed');
+                    updateStatus(data.responseText);
+                    $( "#secure" ).dialog("close");
+                    $( "#stat_mes" ).dialog( "open" );
                 }
             },
             error : function(data, status){
                 updateStatus('Error. Image has not been removed');
-                $( "#mes" ).dialog( "open" );
+                $( "#stat_mes" ).dialog( "open" );
                 //$('.tools').append('<p>Error. Image not saved.</p>')
             }
     });

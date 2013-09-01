@@ -1,17 +1,13 @@
 <?php
 
 class Router{
-    //private $registry;
     private $routes;
     private $request = array();
-    //private $controller_name = 'Index';
-
-
-    /* function __construct($registry) {
-        $this->registry = $registry;
-    }*/
     
-    //Get controller and action name
+    
+    /*
+     * Get controller and action name
+     */
     public function getRoute(){
         $this->request = array(
             'model' => 'IndexModel',
@@ -62,23 +58,9 @@ class Router{
         }
     }
     
-    /**
-     * Get the controller name (after calling getRoute())
-     * @return  string  Controller name
+    /*
+     * Get uri and load model, controller and action
      */
-   /* public function getController() {
-        return $this->request['controller'];
-        //return $this->controller_name;
-    }*/
-
-    /**
-     * Get the action name (after calling getRoute())
-     * @return  string  Action name
-     */
-  /*  public function getAction() {
-        return $this->request['action'];
-    }
-    */
     public function loader(){
         $this->getRoute();
         if ($this->request['model']){
@@ -87,7 +69,7 @@ class Router{
         if ($this->request['controller']){
             require path_to_site . 'Controllers' . DIRECTORY_SEPARATOR . $this->request['controller'] . '.php';
 
-            $controller = new $this->request['controller'];//($this->registry);
+            $controller = new $this->request['controller'];
 
             if (method_exists($controller, $this->request['action'])){
                 $action = $this->request['action'];
@@ -108,9 +90,5 @@ class Router{
     public function ErrorPage(){
         echo 'Page Not Found';
         //header('Location: ' . $url, true, $httpStatus);
-    }
-    
-    public function redirect($url){
-        header("Location: " . $url);
     }
 }

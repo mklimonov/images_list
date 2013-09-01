@@ -11,8 +11,8 @@
             <link href='/css/main.css' rel='stylesheet' type='text/css'>
         {% endblock %}
         {% block javascripts %}
-            <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
-            <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+            <script src="/scripts/jquery-2.0.3.min.js"></script>
+            <script src="/scripts/jquery-ui.js"></script>
         {% endblock %}
     </head>
     <body>
@@ -34,10 +34,9 @@
             </section>
             <div id="footer">
                 {% block footer %}
+                    <h3>(c) 2013</h3>
                 {% endblock %}
             </div>
         </section>
-
-
     </body>
 </html>

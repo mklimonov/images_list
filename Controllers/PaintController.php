@@ -1,22 +1,17 @@
 <?php
 
 class PaintController extends Controller{
-    /*private $model;
-    private $view;*/
 
+   /*
+    * Constructor
+    */
     public function __construct() {
         $this->model = new PaintModel();
         $this->view = Registry::get('View');
-        //$this->view->setLayout('layout.php');
     }
 
 
-    public function indexAction() {
-        //Registry::get('View')->show('Paint', 'index');
-        //Registry::get('View')->show();
-        //Registry::get('View')->show('Index', 'index');
-        //$this->view->render();
-        
+    public function indexAction() {        
         $this->view->render('Paint/index', array());
     }
     
@@ -45,13 +40,11 @@ class PaintController extends Controller{
             'created' => date("Y-m-d H:i:s")
             );
         try {
-            //$paintmodel->setdata($data);
             $this->model->setdata($data);
+            echo 'Image saved';
         } catch(PDOException $ex) {
             echo $ex->getMessage();
         }
-        
-        return TRUE;
     }
     
     public function updateAction(){
@@ -64,22 +57,21 @@ class PaintController extends Controller{
             // Decode Base64 data
             $data = base64_decode($data);  
             // Save data as an image
-            $filename = $_POST['name'];//подстраку взять src: "/
+            $filename = strchr($_POST['name'], 'i');
             $fp = fopen($filename, 'w');  
             fwrite($fp, $data);  
             fclose($fp); 
+            echo 'Image updated';
         }        
-        return TRUE;
     }
     
-    public function editAction(){ //скрытая форма
+    public function check_passAction(){ 
         try {
             if(isset($_POST['id'])){
                 if (isset($_POST['password'])){
                     $res = $this->model->getImage($_POST['id']);
                     if ($_POST['password'] === $res[0]['password']){
-                        $this->view->render('Paint/edit', array('src' => $res[0]['img_name']));
-                        //Registry::get('router')->redirect('paint/edit');
+                       echo 'true';
                     } else {
                         echo 'Wrong Password';
                     }
@@ -88,7 +80,27 @@ class PaintController extends Controller{
             else{
                 throw new Exception('Could not edit image becouse id not found');
             }
-            
+        } catch(PDOException $ex) {
+            echo $ex->getMessage();
+        }
+    }
+    
+    public function editAction(){ //скрытая форма
+        try {
+            if(isset($_POST['id'])){
+              //  if (isset($_POST['password'])){
+                    $res = $this->model->getImage($_POST['id']);
+                //    if ($_POST['password'] === $res[0]['password']){
+                        $this->view->render('Paint/edit', array('src' => $res[0]['img_name']));
+                        //Registry::get('router')->redirect('paint/edit');
+                  //  } else {
+                    //    echo 'Wrong Password';
+                    //}
+               // }
+            }
+            else{
+                throw new Exception('Could not edit image becouse id not found');
+            }    
         } catch(PDOException $ex) {
             echo $ex->getMessage();
         }
@@ -102,6 +114,7 @@ class PaintController extends Controller{
                     if ($_POST['password'] === $res[0]['password']){
                         unlink(path_to_site . $res[0]['img_name']);
                         $this->model->delImage($_POST['id']);
+                        echo 'Image removed';
                     } else {
                         echo 'Wrong Password';
                     }

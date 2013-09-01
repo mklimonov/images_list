@@ -2,7 +2,11 @@
 
 class View {
     private $twig;
-
+    
+    /*
+     * Constructor
+     * Loading twig
+     */
     function __construct(){
         Twig_Autoloader::register();
         $tpl_path = path_to_site . 'Views';
@@ -10,6 +14,9 @@ class View {
         $this->twig = new Twig_Environment($loader);
     }
 
+    /*
+     * Loading template and rendering him
+     */
     public function render($name, $data){
         try {
             $template = $this->twig->loadTemplate($name . '.html.twig');

@@ -1,6 +1,5 @@
 /*
     Document   : main
-    Created on : 21.06.2013, 16:30:13
     Author     : MIKHAIL
 */
 
@@ -30,6 +29,9 @@ body { line-height: 1;font-family: Arial, Helvetica, sans-serif;font-size: 12px;
 .main h2
     { line-height: 1.2em; font-size: 32px; margin-bottom: 10px; font-weight: normal; color: #F48A00; }
 .main p { line-height: 1.5em; margin-bottom: 20px; }
+.main li {border-bottom: 1px solid #ccc;}
+.main li img {float: left;}
+.main li button {margin: 140px auto;}
 
 #footer { border-top: 1px solid #ccc; clear: both; text-align: center; padding: 10px; color: #aaa; }
 
