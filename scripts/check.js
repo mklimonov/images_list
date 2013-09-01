@@ -168,6 +168,7 @@ $(function(){
                 if ((status == 'success') && (data.responseText)){
                     //updateStatus('Image removed');
                     updateStatus(data.responseText);
+                    setTimeout("document.location.href='/'", 1500);
                     $( "#secure" ).dialog("close");
                     $( "#stat_mes" ).dialog( "open" );
                 }

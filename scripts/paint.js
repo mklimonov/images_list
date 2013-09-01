@@ -169,9 +169,9 @@ $(function(){
                 complete : function(data, status){
                     if ((status == 'success') && (data.responseText)){
                         updateStatus(data.responseText);
+                        setTimeout("document.location.href='/'", 1500);
                         $( "#secure" ).dialog("close");
                         $( "#stat_mes" ).dialog( "open" );
-                        setTimeout("document.location.href='/'", 1500);
                     }
                     /*if (status == 'success'){
                         updateStatus('Image Saved');
@@ -199,8 +199,8 @@ $(function(){
                 complete : function(data, status){
                     if ((status == 'success') && (data.responseText)){
                         updateStatus(data.responseText);
-                        $( "#stat_mes" ).dialog( "open" );
                         setTimeout("document.location.href='/'", 1500);
+                        $( "#stat_mes" ).dialog( "open" );
                     }
                     /*if (status == 'success'){
                         updateStatus('Image Updated');
